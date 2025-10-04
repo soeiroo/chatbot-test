@@ -12,6 +12,7 @@ app.use(express.json());
 // Variáveis do ambiente
 const INSTANCE_ID = process.env.CHATPRO_INSTANCE_ID; // ex: chatpro-no3klw7pt3
 const TOKEN = process.env.CHATPRO_TOKEN; // ex: 175d67453dab88d176bc6fa40d07cdc8
+const NUMERO_CLIENTE = process.env.NUMERO_CLIENTE; // ex: 88988943823
 
 app.post("/send-message", async (req, res) => {
   const { number, message } = req.body;
@@ -42,7 +43,7 @@ app.post("/send-message", async (req, res) => {
       return res.json({
         status: true,
         message: "Mensagem enviada com sucesso!",
-        id: data.resposeMessage?.id
+        id: data.responseMessage?.id
       });
     } else {
       return res.status(400).json({
@@ -57,4 +58,23 @@ app.post("/send-message", async (req, res) => {
   }
 });
 
-app.listen(3001, () => console.log("✅ Backend rodando em http://localhost:3001"));
+// ======================
+// 📥 RECEBER MENSAGENS
+// ======================
+app.post("/webhook", (req, res) => {
+  console.log("📬 Webhook recebido:", req.body);
+  res.sendStatus(200);
+});
+
+
+app.get("/", (req, res) => {
+  res.send("API do ChatPro rodando!");
+});
+
+
+
+// Inicia o servidor
+
+app.listen(3001, () => { 
+  console.log("✅ Backend rodando em http://localhost:3001");
+});
